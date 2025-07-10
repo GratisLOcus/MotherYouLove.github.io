@@ -1,0 +1,2045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motheryouare - Premium Clothing for Men & Women</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=YOUR_PAYPAL_CLIENT_ID&currency=USD"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); }
+            to { transform: translateX(0); }
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+        .slide-in {
+            animation: slideIn 0.5s ease-out forwards;
+        }
+        .popup {
+            animation: fadeIn 0.3s ease-out forwards;
+        }
+        .cart-notification {
+            animation: slideIn 0.3s ease-out forwards;
+        }
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+        .hover-scale:hover {
+            transform: scale(1.03);
+        }
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+        .product-card:hover .quick-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .quick-view {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: all 0.3s ease;
+        }
+        .nav-link::after {
+            content: '';
+            display: block;
+            width: 0;
+            height: 2px;
+            background: #000;
+            transition: width 0.3s;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.6);
+        }
+        .gemini-chat-container {
+            max-height: 70vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .gemini-chat-messages {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding-bottom: 1rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header/Navigation -->
+    <header class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex justify-between items-center">
+                <!-- Logo -->
+                <div class="flex items-center">
+                    <a href="#home" class="text-2xl font-bold text-gray-800 hover:text-gray-600 transition">
+                        <span class="text-pink-500">Mother</span>youare
+                    </a>
+                </div>
+                
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-800 focus:outline-none">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                        </svg>
+                    </button>
+                </div>
+                
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex space-x-8">
+                    <a href="#home" class="nav-link text-gray-800 font-medium hover:text-pink-500 transition" onclick="showSection('home-section')">Home</a>
+                    <div class="dropdown relative">
+                        <button class="nav-link text-gray-800 font-medium hover:text-pink-500 transition flex items-center">
+                            Women <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        </button>
+                        <div class="dropdown-menu absolute hidden bg-white shadow-lg rounded-md mt-2 py-2 w-48">
+                            <button class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="filterProducts('Women')">Tops</button>
+                            <button class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="filterProducts('Women')">Dresses</button>
+                            <button class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="filterProducts('Women')">Jeans</button>
+                            <button class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="filterProducts('Women')">Accessories</button>
+                        </div>
+                    </div>
+                    <div class="dropdown relative">
+                        <button class="nav-link text-gray-800 font-medium hover:text-pink-500 transition flex items-center">
+                            Men <i class="fas fa-chevron-down ml-1 text-xs"></i>
+                        </button>
+                        <div class="dropdown-menu absolute hidden bg-white shadow-lg rounded-md mt-2 py-2 w-48">
+                            <button class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="filterProducts('Men')">Shirts</button>
+                            <button class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="filterProducts('Men')">Pants</button>
+                            <button class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="filterProducts('Men')">Jackets</button>
+                            <button class="block px-4 py-2 text-gray-800 hover:bg-gray-100" onclick="filterProducts('Men')">Accessories</button>
+                        </div>
+                    </div>
+                    <button class="nav-link text-gray-800 font-medium hover:text-pink-500 transition" onclick="filterProducts('New Arrivals')">New Arrivals</button>
+                    <button class="nav-link text-gray-800 font-medium hover:text-pink-500 transition" onclick="filterProducts('Sale')">Sale</button>
+                    <button class="nav-link text-gray-800 font-medium hover:text-pink-500 transition" onclick="showSection('wishlist-section')">Wishlist</button>
+                    <button id="admin-panel-nav-link" class="nav-link text-gray-800 font-medium hover:text-pink-500 transition hidden" onclick="showSection('admin-panel-section')">Admin Panel</button>
+                </nav>
+                
+                <!-- Icons -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <button class="text-gray-800 hover:text-pink-500 transition">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button id="profile-button" class="text-gray-800 hover:text-pink-500 transition" onclick="showSection('profile-section')">
+                        <i class="far fa-user"></i>
+                    </button>
+                    <div class="relative">
+                        <button id="cart-button" class="text-gray-800 hover:text-pink-500 transition">
+                            <i class="fas fa-shopping-bag"></i>
+                            <span id="cart-count" class="absolute -top-2 -right-2 bg-pink-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                        </button>
+                    </div>
+                    <button id="gemini-chat-toggle" class="text-gray-800 hover:text-pink-500 transition">
+                        <i class="fas fa-comments"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white py-2 px-4 shadow-lg">
+            <button class="block py-2 text-gray-800 hover:text-pink-500" onclick="mobileMenu.classList.add('hidden'); showSection('home-section')">Home</button>
+            <div class="py-2">
+                <button class="flex items-center justify-between w-full text-gray-800 hover:text-pink-500" onclick="this.nextElementSibling.classList.toggle('hidden')">
+                    Women <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="hidden pl-4 mt-1">
+                    <button class="block py-1 text-gray-600 hover:text-pink-500" onclick="mobileMenu.classList.add('hidden'); filterProducts('Women')">Tops</button>
+                    <button class="block py-1 text-gray-600 hover:text-pink-500" onclick="mobileMenu.classList.add('hidden'); filterProducts('Women')">Dresses</button>
+                    <button class="block py-1 text-gray-600 hover:text-pink-500" onclick="mobileMenu.classList.add('hidden'); filterProducts('Women')">Jeans</button>
+                </div>
+            </div>
+            <div class="py-2">
+                <button class="flex items-center justify-between w-full text-gray-800 hover:text-pink-500" onclick="this.nextElementSibling.classList.toggle('hidden')">
+                    Men <i class="fas fa-chevron-down"></i>
+                </button>
+                <div class="hidden pl-4 mt-1">
+                    <button class="block py-1 text-gray-600 hover:text-pink-500" onclick="mobileMenu.classList.add('hidden'); filterProducts('Men')">Shirts</button>
+                    <button class="block py-1 text-gray-600 hover:text-pink-500" onclick="mobileMenu.classList.add('hidden'); filterProducts('Men')">Pants</button>
+                    <button class="block py-1 text-gray-600 hover:text-pink-500" onclick="mobileMenu.classList.add('hidden'); filterProducts('Men')">Jackets</button>
+                </div>
+            </div>
+            <button class="block py-2 text-gray-800 hover:text-pink-500" onclick="mobileMenu.classList.add('hidden'); filterProducts('New Arrivals')">New Arrivals</button>
+            <button class="block py-2 text-gray-800 hover:text-pink-500" onclick="mobileMenu.classList.add('hidden'); filterProducts('Sale')">Sale</button>
+            <button class="block py-2 text-gray-800 hover:text-pink-500" onclick="mobileMenu.classList.add('hidden'); showSection('wishlist-section')">Wishlist</button>
+            <button id="mobile-admin-panel-nav-link" class="block py-2 text-gray-800 hover:text-pink-500 hidden" onclick="mobileMenu.classList.add('hidden'); showSection('admin-panel-section')">Admin Panel</button>
+            <div class="flex space-x-4 py-3">
+                <button class="text-gray-800 hover:text-pink-500">
+                    <i class="fas fa-search"></i>
+                </button>
+                <button class="text-gray-800 hover:text-pink-500" onclick="mobileMenu.classList.add('hidden'); showSection('profile-section')">
+                    <i class="far fa-user"></i>
+                </button>
+                <div class="relative">
+                    <button class="text-gray-800 hover:text-pink-500" onclick="openCart(); mobileMenu.classList.add('hidden');">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span id="mobile-cart-count" class="absolute -top-2 -right-2 bg-pink-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">0</span>
+                    </button>
+                </div>
+                <button id="mobile-gemini-chat-toggle" class="text-gray-800 hover:text-pink-500 transition">
+                    <i class="fas fa-comments"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Sections -->
+    <main id="main-content">
+        <!-- Home Section -->
+        <section id="home-section" class="active-section">
+            <!-- Hero Section -->
+            <section class="relative bg-gradient-to-r from-gray-900 to-gray-700 text-white overflow-hidden">
+                <div class="container mx-auto px-4 py-20 md:py-32 relative z-10">
+                    <div class="max-w-2xl fade-in">
+                        <h1 class="text-4xl md:text-5xl font-bold mb-4">Summer Collection 2023</h1>
+                        <p class="text-lg md:text-xl mb-8">Discover our premium selection of clothing for men and women. Comfort meets style in every piece.</p>
+                        <div class="flex space-x-4">
+                            <button onclick="filterProducts('Women')" class="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-md font-medium transition">Shop Women</button>
+                            <button onclick="filterProducts('Men')" class="bg-gray-700 hover:bg-gray-600 text-white px-6 py-3 rounded-md font-medium transition">Shop Men</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="absolute inset-0 bg-black opacity-30"></div>
+                <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1483985988355-763728e1935b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80');"></div>
+            </section>
+
+            <!-- Categories Section -->
+            <section class="py-16 bg-white">
+                <div class="container mx-auto px-4">
+                    <h2 class="text-3xl font-bold text-center mb-12">Shop by Category</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="relative group overflow-hidden rounded-lg hover-scale">
+                            <img src="https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Women's Collection" class="w-full h-64 object-cover transition duration-500 group-hover:scale-105">
+                            <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                                <button onclick="filterProducts('Women')" class="text-white text-xl font-bold bg-pink-500 hover:bg-pink-600 px-6 py-2 rounded-md transition">Women</button>
+                            </div>
+                        </div>
+                        <div class="relative group overflow-hidden rounded-lg hover-scale">
+                            <img src="https://images.unsplash.com/photo-1527719327859-c6ce80353573?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=764&q=80" alt="Men's Collection" class="w-full h-64 object-cover transition duration-500 group-hover:scale-105">
+                            <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                                <button onclick="filterProducts('Men')" class="text-white text-xl font-bold bg-blue-500 hover:bg-blue-600 px-6 py-2 rounded-md transition">Men</button>
+                            </div>
+                        </div>
+                        <div class="relative group overflow-hidden rounded-lg hover-scale">
+                            <img src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="New Arrivals" class="w-full h-64 object-cover transition duration-500 group-hover:scale-105">
+                            <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                                <button onclick="filterProducts('New Arrivals')" class="text-white text-xl font-bold bg-purple-500 hover:bg-purple-600 px-6 py-2 rounded-md transition">New Arrivals</button>
+                            </div>
+                        </div>
+                        <div class="relative group overflow-hidden rounded-lg hover-scale">
+                            <img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Sale" class="w-full h-64 object-cover transition duration-500 group-hover:scale-105">
+                            <div class="absolute inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+                                <button onclick="filterProducts('Sale')" class="text-white text-xl font-bold bg-red-500 hover:bg-red-600 px-6 py-2 rounded-md transition">Sale</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Featured Products -->
+            <section class="py-16 bg-gray-50">
+                <div class="container mx-auto px-4">
+                    <div class="flex justify-between items-center mb-8">
+                        <h2 class="text-3xl font-bold">Featured Products</h2>
+                        <button onclick="filterProducts('All')" class="text-pink-500 hover:text-pink-600 font-medium">View All</button>
+                    </div>
+                    <div id="featured-products-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                        <!-- Products will be loaded here dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Banner Section -->
+            <section class="py-16 bg-pink-50">
+                <div class="container mx-auto px-4">
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="md:flex">
+                            <div class="md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
+                                <h2 class="text-3xl font-bold mb-4">Summer Sale</h2>
+                                <p class="text-gray-600 mb-6">Up to 50% off on selected items. Limited time offer. Don't miss out!</p>
+                                <button onclick="filterProducts('Sale')" class="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-md font-medium transition w-max">Shop Now</button>
+                            </div>
+                            <div class="md:w-1/2">
+                                <img src="https://images.unsplash.com/photo-1556905055-8f358a7a47b2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80" alt="Summer Sale" class="w-full h-full object-cover">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- New Arrivals -->
+            <section id="new-arrivals" class="py-16 bg-white">
+                <div class="container mx-auto px-4">
+                    <div class="flex justify-between items-center mb-8">
+                        <h2 class="text-3xl font-bold">New Arrivals</h2>
+                        <button onclick="filterProducts('New Arrivals')" class="text-pink-500 hover:text-pink-600 font-medium">View All</button>
+                    </div>
+                    <div id="new-arrivals-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                        <!-- Products will be loaded here dynamically -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testimonials -->
+            <section class="py-16 bg-gray-50">
+                <div class="container mx-auto px-4">
+                    <h2 class="text-3xl font-bold text-center mb-12">What Our Customers Say</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+                            <div class="flex items-center mb-4">
+                                <div class="text-yellow-400 mr-2">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 mb-4">"The quality of the clothes is amazing! I've bought several items and they've all exceeded my expectations."</p>
+                            <div class="flex items-center">
+                                <img src="https://randomuser.me/api/portraits/women/44.jpg" alt="Customer" class="w-10 h-10 rounded-full mr-3">
+                                <div>
+                                    <h4 class="font-semibold">Sarah Johnson</h4>
+                                    <p class="text-gray-500 text-sm">Verified Buyer</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+                            <div class="flex items-center mb-4">
+                                <div class="text-yellow-400 mr-2">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 mb-4">"Great customer service and fast shipping. The summer dress I ordered fits perfectly and is so comfortable."</p>
+                            <div class="flex items-center">
+                                <img src="https://randomuser.me/api/portraits/women/68.jpg" alt="Customer" class="w-10 h-10 rounded-full mr-3">
+                                <div>
+                                    <h4 class="font-semibold">Emily Wilson</h4>
+                                    <p class="text-gray-500 text-sm">Verified Buyer</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition">
+                            <div class="flex items-center mb-4">
+                                <div class="text-yellow-400 mr-2">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star-half-alt"></i>
+                                </div>
+                            </div>
+                            <p class="text-gray-600 mb-4">"I'm very satisfied with my purchase. The material is high quality and the design is exactly as shown on the website."</p>
+                            <div class="flex items-center">
+                                <img src="https://randomuser.me/api/portraits/men/32.jpg" alt="Customer" class="w-10 h-10 rounded-full mr-3">
+                                <div>
+                                    <h4 class="font-semibold">Michael Brown</h4>
+                                    <p class="text-gray-500 text-sm">Verified Buyer</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Newsletter -->
+            <section class="py-16 bg-pink-500 text-white">
+                <div class="container mx-auto px-4 text-center">
+                    <h2 class="text-3xl font-bold mb-4">Join Our Newsletter</h2>
+                    <p class="mb-8 max-w-2xl mx-auto">Subscribe to get updates on new arrivals, special offers and other discount information.</p>
+                    <div class="max-w-md mx-auto flex">
+                        <input type="email" placeholder="Your email address" class="flex-grow px-4 py-3 rounded-l focus:outline-none text-gray-800">
+                        <button class="bg-gray-800 hover:bg-gray-700 px-6 py-3 rounded-r font-medium transition">Subscribe</button>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <!-- Product Listing Section (for filtered products) -->
+        <section id="product-listing-section" class="hidden py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <h2 id="product-listing-title" class="text-3xl font-bold mb-8"></h2>
+                <div id="product-listing-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                    <!-- Filtered products will be loaded here dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Wishlist Section -->
+        <section id="wishlist-section" class="hidden py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold mb-8">Your Wishlist</h2>
+                <div id="wishlist-items-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                    <!-- Wishlist items will be loaded here dynamically -->
+                    <div class="text-center py-10 text-gray-500 col-span-full">
+                        <i class="fas fa-heart text-4xl mb-2"></i>
+                        <p>Your wishlist is empty.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Profile Section -->
+        <section id="profile-section" class="hidden py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold mb-8">Your Profile</h2>
+                <div class="bg-white p-8 rounded-lg shadow-md max-w-xl mx-auto">
+                    <div id="auth-status" class="mb-6 text-center">
+                        <p class="text-gray-700 mb-2">You are currently signed in as: <span id="user-email" class="font-semibold">Anonymous</span></p>
+                        <p class="text-gray-700 mb-4">User ID: <span id="user-id" class="font-semibold"></span></p>
+                        <div id="auth-buttons">
+                            <button id="google-login-button" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-md font-medium transition mr-4">
+                                <i class="fab fa-google mr-2"></i> Sign in with Google
+                            </button>
+                            <button id="email-login-button" class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-md font-medium transition">
+                                Sign in with Email
+                            </button>
+                            <button id="logout-button" class="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-md font-medium transition hidden mt-4">
+                                Log Out
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="email-auth-form" class="hidden">
+                        <h3 class="text-xl font-bold mb-4">Email Login / Sign Up</h3>
+                        <input type="email" id="email-input" placeholder="Email" class="w-full p-3 border border-gray-300 rounded-md mb-4 focus:outline-none focus:ring-2 focus:ring-pink-500">
+                        <input type="password" id="password-input" placeholder="Password" class="w-full p-3 border border-gray-300 rounded-md mb-6 focus:outline-none focus:ring-2 focus:ring-pink-500">
+                        <div class="flex justify-between">
+                            <button id="email-signup-button" class="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-md font-medium transition">
+                                Sign Up
+                            </button>
+                            <button id="email-signin-button" class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded-md font-medium transition">
+                                Sign In
+                            </button>
+                        </div>
+                        <p id="auth-error-message" class="text-red-500 text-sm mt-4 hidden"></p>
+                        <button id="back-to-auth-options" class="text-gray-600 hover:text-gray-800 mt-4">Back to login options</button>
+                    </div>
+
+                    <div id="user-profile-details" class="mt-8 hidden">
+                        <h3 class="text-xl font-bold mb-4">User Details</h3>
+                        <div class="mb-4">
+                            <label for="profile-name" class="block text-gray-700 font-medium mb-2">Name</label>
+                            <input type="text" id="profile-name" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                        </div>
+                        <div class="mb-4">
+                            <label for="profile-address" class="block text-gray-700 font-medium mb-2">Address</label>
+                            <input type="text" id="profile-address" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                        </div>
+                        <button id="save-profile-button" class="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-md font-medium transition">
+                            Save Profile
+                        </button>
+                        <p id="profile-save-message" class="text-green-600 text-sm mt-4 hidden"></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Checkout Section -->
+        <section id="checkout-section" class="hidden py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold mb-8">Checkout</h2>
+                <div class="bg-white p-8 rounded-lg shadow-md max-w-2xl mx-auto">
+                    <h3 class="text-xl font-bold mb-4">Order Summary</h3>
+                    <div id="checkout-items" class="space-y-4 mb-6 border-b pb-4">
+                        <!-- Checkout items will be dynamically loaded here -->
+                    </div>
+                    <div class="flex justify-between text-lg font-bold mb-6">
+                        <span>Total</span>
+                        <span id="checkout-total" class="text-pink-500"></span>
+                    </div>
+
+                    <h3 class="text-xl font-bold mb-4">Shipping Information</h3>
+                    <form id="shipping-form" class="mb-6">
+                        <div class="mb-4">
+                            <label for="shipping-name" class="block text-gray-700 font-medium mb-2">Full Name</label>
+                            <input type="text" id="shipping-name" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="shipping-address" class="block text-gray-700 font-medium mb-2">Address</label>
+                            <input type="text" id="shipping-address" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500" required>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label for="shipping-city" class="block text-gray-700 font-medium mb-2">City</label>
+                                <input type="text" id="shipping-city" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500" required>
+                            </div>
+                            <div>
+                                <label for="shipping-zip" class="block text-gray-700 font-medium mb-2">Zip Code</label>
+                                <input type="text" id="shipping-zip" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500" required>
+                            </div>
+                        </div>
+                        <div class="mb-6">
+                            <label for="shipping-country" class="block text-gray-700 font-medium mb-2">Country</label>
+                            <input type="text" id="shipping-country" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500" required>
+                        </div>
+                    </form>
+
+                    <h3 class="text-xl font-bold mb-4">Payment Information</h3>
+                    <div id="paypal-button-container" class="mb-6">
+                        <!-- PayPal buttons will render here -->
+                    </div>
+                    <p id="payment-message" class="text-center text-green-600 font-semibold hidden"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Admin Panel Section -->
+        <section id="admin-panel-section" class="hidden py-16 bg-gray-50">
+            <div class="container mx-auto px-4">
+                <h2 class="text-3xl font-bold mb-8">Admin Panel</h2>
+                <div class="bg-white p-8 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-4">Add New Product</h3>
+                    <form id="add-product-form" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                        <div>
+                            <label for="product-title" class="block text-gray-700 font-medium mb-2">Title</label>
+                            <input type="text" id="product-title" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500" required>
+                        </div>
+                        <div>
+                            <label for="product-category" class="block text-gray-700 font-medium mb-2">Category</label>
+                            <input type="text" id="product-category" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500" placeholder="e.g., Women's Collection, Men's Collection" required>
+                        </div>
+                        <div>
+                            <label for="product-price" class="block text-gray-700 font-medium mb-2">Price</label>
+                            <input type="number" id="product-price" step="0.01" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500" required>
+                        </div>
+                        <div>
+                            <label for="product-original-price" class="block text-gray-700 font-medium mb-2">Original Price (for Sale)</label>
+                            <input type="number" id="product-original-price" step="0.01" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="product-description" class="block text-gray-700 font-medium mb-2">Description</label>
+                            <textarea id="product-description" rows="3" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500" required></textarea>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="product-image" class="block text-gray-700 font-medium mb-2">Main Image URL</label>
+                            <input type="url" id="product-image" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500" required>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label for="product-thumbnails" class="block text-gray-700 font-medium mb-2">Thumbnail Image URLs (comma-separated)</label>
+                            <input type="text" id="product-thumbnails" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500" placeholder="url1, url2, url3">
+                        </div>
+                        <div>
+                            <label for="product-sizes" class="block text-gray-700 font-medium mb-2">Sizes (comma-separated)</label>
+                            <input type="text" id="product-sizes" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500" placeholder="S,M,L,XL">
+                        </div>
+                        <div>
+                            <label for="product-colors" class="block text-gray-700 font-medium mb-2">Colors (comma-separated)</label>
+                            <input type="text" id="product-colors" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500" placeholder="red,blue,black">
+                        </div>
+                        <div class="md:col-span-2">
+                            <button type="submit" class="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-md font-medium transition w-full">Add Product</button>
+                        </div>
+                        <p id="add-product-message" class="text-green-600 text-sm mt-2 hidden md:col-span-2"></p>
+                    </form>
+
+                    <h3 class="text-xl font-bold mb-4">Manage Products</h3>
+                    <div class="overflow-x-auto">
+                        <table class="min-w-full bg-white rounded-lg shadow-md">
+                            <thead>
+                                <tr class="bg-gray-200 text-gray-700 uppercase text-sm leading-normal">
+                                    <th class="py-3 px-6 text-left">ID</th>
+                                    <th class="py-3 px-6 text-left">Title</th>
+                                    <th class="py-3 px-6 text-left">Category</th>
+                                    <th class="py-3 px-6 text-left">Price</th>
+                                    <th class="py-3 px-6 text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-product-list" class="text-gray-600 text-sm font-light">
+                                <!-- Products will be loaded here dynamically by admin panel -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-900 text-white pt-12 pb-6">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h3 class="text-xl font-bold mb-4"><span class="text-pink-500">Mother</span>youare</h3>
+                    <p class="text-gray-400">Premium clothing for men and women. Quality materials, perfect fit, and timeless style.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Shop</h4>
+                    <ul class="space-y-2">
+                        <li><button onclick="filterProducts('Women')" class="text-gray-400 hover:text-white transition">Women</button></li>
+                        <li><button onclick="filterProducts('Men')" class="text-gray-400 hover:text-white transition">Men</button></li>
+                        <li><button onclick="filterProducts('New Arrivals')" class="text-gray-400 hover:text-white transition">New Arrivals</button></li>
+                        <li><button onclick="filterProducts('Sale')" class="text-gray-400 hover:text-white transition">Sale</button></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Help</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Contact Us</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">FAQs</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Shipping & Returns</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition">Size Guide</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Follow Us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                    <h4 class="text-lg font-semibold mt-6 mb-2">Payment Methods</h4>
+                    <div class="flex space-x-2">
+                        <i class="fab fa-cc-visa text-gray-400 text-xl"></i>
+                        <i class="fab fa-cc-mastercard text-gray-400 text-xl"></i>
+                        <i class="fab fa-cc-amex text-gray-400 text-xl"></i>
+                        <i class="fab fa-cc-paypal text-gray-400 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t border-gray-800 pt-6 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-400 text-sm mb-4 md:mb-0">© 2023 Motheryouare. All rights reserved.</p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition">Privacy Policy</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition">Terms of Service</a>
+                    <a href="#" class="text-gray-400 hover:text-white text-sm transition">Cookies</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Quick View Modal -->
+    <div id="quick-view-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4 modal-overlay">
+        <div class="bg-white rounded-lg max-w-4xl w-full max-h-screen overflow-y-auto popup">
+            <div class="relative">
+                <button onclick="closeQuickView()" class="absolute top-4 right-4 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 z-10">
+                    <i class="fas fa-times text-gray-800"></i>
+                </button>
+                <div class="md:flex">
+                    <div class="md:w-1/2 p-6">
+                        <img id="quick-view-image" src="" alt="Product" class="w-full rounded-lg">
+                        <div id="quick-view-thumbnails" class="grid grid-cols-4 gap-2 mt-4">
+                            <!-- Thumbnails will be loaded here dynamically -->
+                        </div>
+                    </div>
+                    <div class="md:w-1/2 p-6">
+                        <h2 id="quick-view-title" class="text-2xl font-bold mb-2"></h2>
+                        <p id="quick-view-category" class="text-gray-600 mb-4"></p>
+                        <div class="flex items-center mb-4">
+                            <div class="text-yellow-400 mr-2">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <span class="text-gray-600 text-sm">(24 reviews)</span>
+                        </div>
+                        <p id="quick-view-price" class="text-2xl font-bold mb-4"></p>
+                        <p id="quick-view-description" class="text-gray-600 mb-6"></p>
+                        
+                        <div class="mb-6">
+                            <h3 class="font-semibold mb-2">Size</h3>
+                            <div id="quick-view-sizes" class="flex flex-wrap gap-2">
+                                <!-- Sizes will be loaded here dynamically -->
+                            </div>
+                        </div>
+                        
+                        <div class="mb-6">
+                            <h3 class="font-semibold mb-2">Color</h3>
+                            <div id="quick-view-colors" class="flex gap-2">
+                                <!-- Colors will be loaded here dynamically -->
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center mb-6">
+                            <div class="flex items-center border rounded mr-4">
+                                <button id="quick-view-quantity-minus" class="px-3 py-1 text-xl">-</button>
+                                <span id="quick-view-quantity" class="px-3">1</span>
+                                <button id="quick-view-quantity-plus" class="px-3 py-1 text-xl">+</button>
+                            </div>
+                            <button id="quick-view-add-to-cart" class="bg-gray-800 hover:bg-gray-700 text-white px-6 py-3 rounded font-medium transition flex-grow">
+                                Add to Cart
+                            </button>
+                        </div>
+                        <button id="quick-view-add-to-wishlist" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3 rounded font-medium transition w-full mt-2">
+                            <i class="far fa-heart mr-2"></i> Add to Wishlist
+                        </button>
+                        
+                        <div class="border-t pt-4 mt-4">
+                            <div class="flex items-start mb-2">
+                                <i class="fas fa-truck text-gray-500 mt-1 mr-2"></i>
+                                <div>
+                                    <h4 class="font-semibold">Free Shipping</h4>
+                                    <p class="text-gray-600 text-sm">On orders over </p>
+                                </div>
+                            </div>
+                            <div class="flex items-start">
+                                <i class="fas fa-undo text-gray-500 mt-1 mr-2"></i>
+                                <div>
+                                    <h4 class="font-semibold">Easy Returns</h4>
+                                    <p class="text-gray-600 text-sm">30-day return policy</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cart Sidebar -->
+    <div id="cart-sidebar" class="fixed top-0 right-0 h-full w-full md:w-96 bg-white shadow-lg transform translate-x-full z-50 transition duration-300 overflow-y-auto">
+        <div class="p-6 flex flex-col h-full">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold">Your Cart (<span id="sidebar-cart-count">0</span>)</h2>
+                <button onclick="closeCart()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div id="cart-items" class="space-y-4 mb-6 flex-grow">
+                <!-- Cart items will be added here dynamically -->
+                <div class="text-center py-10 text-gray-500">
+                    <i class="fas fa-shopping-bag text-4xl mb-2"></i>
+                    <p>Your cart is empty</p>
+                </div>
+            </div>
+            
+            <div class="border-t pt-4 mb-4">
+                <div class="flex justify-between mb-2">
+                    <span class="text-gray-600">Subtotal</span>
+                    <span id="cart-subtotal" class="font-semibold">.00</span>
+                </div>
+                <div class="flex justify-between mb-2">
+                    <span class="text-gray-600">Shipping</span>
+                    <span class="font-semibold">Free</span>
+                </div>
+                <div class="flex justify-between text-lg font-bold">
+                    <span>Total</span>
+                    <span id="cart-total" class="text-pink-500">.00</span>
+                </div>
+            </div>
+            
+            <button onclick="proceedToCheckout()" class="block bg-pink-500 hover:bg-pink-600 text-white text-center py-3 rounded-md font-medium transition mb-4">Proceed to Checkout</button>
+            <button onclick="closeCart()" class="block border border-gray-800 text-gray-800 text-center py-3 rounded-md font-medium hover:bg-gray-100 transition">Continue Shopping</button>
+        </div>
+    </div>
+
+    <!-- Cart Notification -->
+    <div id="cart-notification" class="fixed top-4 right-4 bg-white shadow-lg rounded-md p-4 hidden z-50 cart-notification">
+        <div class="flex items-start">
+            <img id="notification-image" src="" alt="Product" class="w-16 h-16 object-cover rounded mr-3">
+            <div class="flex-grow">
+                <p class="font-medium">Added to Cart</p>
+                <p id="notification-title" class="text-sm text-gray-600"></p>
+            </div>
+            <button onclick="closeNotification()" class="text-gray-500 hover:text-gray-700 ml-2">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Custom Alert/Message Box -->
+    <div id="custom-message-box" class="fixed inset-0 bg-black bg-opacity-50 z-[100] hidden flex items-center justify-center p-4 modal-overlay">
+        <div class="bg-white rounded-lg p-6 shadow-xl max-w-sm w-full text-center popup">
+            <h3 id="message-box-title" class="text-xl font-bold mb-4"></h3>
+            <p id="message-box-content" class="text-gray-700 mb-6"></p>
+            <button onclick="closeMessageBox()" class="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-md font-medium transition">OK</button>
+        </div>
+    </div>
+
+    <!-- Gemini Chatbot Modal -->
+    <div id="gemini-chat-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4 modal-overlay">
+        <div class="bg-white rounded-lg max-w-lg w-full h-[80vh] flex flex-col popup">
+            <div class="flex justify-between items-center p-4 border-b">
+                <h2 class="text-xl font-bold">Gemini Support Assistant</h2>
+                <button onclick="closeGeminiChat()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="gemini-chat-messages" class="gemini-chat-messages p-4 flex-grow">
+                <!-- Chat messages will be appended here -->
+                <div class="flex justify-start mb-3">
+                    <div class="bg-gray-200 text-gray-800 p-3 rounded-lg max-w-[80%]">
+                        Hello! How can I assist you with your shopping today?
+                    </div>
+                </div>
+            </div>
+            <div class="p-4 border-t flex items-center">
+                <input type="text" id="gemini-chat-input" placeholder="Ask me anything..." class="flex-grow p-3 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                <button id="gemini-chat-send" class="bg-pink-500 hover:bg-pink-600 text-white px-6 py-3 rounded-r-md font-medium transition">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Product Modal -->
+    <div id="edit-product-modal" class="fixed inset-0 bg-black bg-opacity-50 z-[100] hidden flex items-center justify-center p-4 modal-overlay">
+        <div class="bg-white rounded-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto popup">
+            <div class="relative p-6">
+                <button onclick="closeEditProductModal()" class="absolute top-4 right-4 bg-white rounded-full p-2 shadow-md hover:bg-gray-100 z-10">
+                    <i class="fas fa-times text-gray-800"></i>
+                </button>
+                <h2 class="text-2xl font-bold mb-4">Edit Product</h2>
+                <form id="edit-product-form" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="hidden" id="edit-product-id">
+                    <div>
+                        <label for="edit-product-title" class="block text-gray-700 font-medium mb-2">Title</label>
+                        <input type="text" id="edit-product-title" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500" required>
+                    </div>
+                    <div>
+                        <label for="edit-product-category" class="block text-gray-700 font-medium mb-2">Category</label>
+                        <input type="text" id="edit-product-category" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500" required>
+                    </div>
+                    <div>
+                        <label for="edit-product-price" class="block text-gray-700 font-medium mb-2">Price</label>
+                        <input type="number" id="edit-product-price" step="0.01" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500" required>
+                    </div>
+                    <div>
+                        <label for="edit-product-original-price" class="block text-gray-700 font-medium mb-2">Original Price</label>
+                        <input type="number" id="edit-product-original-price" step="0.01" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="edit-product-description" class="block text-gray-700 font-medium mb-2">Description</label>
+                        <textarea id="edit-product-description" rows="3" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500" required></textarea>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="edit-product-image" class="block text-gray-700 font-medium mb-2">Main Image URL</label>
+                        <input type="url" id="edit-product-image" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500" required>
+                    </div>
+                    <div class="md:col-span-2">
+                        <label for="edit-product-thumbnails" class="block text-gray-700 font-medium mb-2">Thumbnail Image URLs (comma-separated)</label>
+                        <input type="text" id="edit-product-thumbnails" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                    </div>
+                    <div>
+                        <label for="edit-product-sizes" class="block text-gray-700 font-medium mb-2">Sizes (comma-separated)</label>
+                        <input type="text" id="edit-product-sizes" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                    </div>
+                    <div>
+                        <label for="edit-product-colors" class="block text-gray-700 font-medium mb-2">Colors (comma-separated)</label>
+                        <input type="text" id="edit-product-colors" class="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500">
+                    </div>
+                    <div class="md:col-span-2 mt-4">
+                        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-3 rounded-md font-medium transition w-full">Save Changes</button>
+                    </div>
+                    <p id="edit-product-message" class="text-green-600 text-sm mt-2 hidden md:col-span-2"></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="module">
+        // Firebase Imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-analytics.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, query, addDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js";
+
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAr6IPN50BLMs9Wq-VQhXymDjztgdJKFEY",
+            authDomain: "locusstarks.firebaseapp.com",
+            projectId: "locusstarks",
+            storageBucket: "locusstarks.firebasestorage.app",
+            messagingSenderId: "971162876623",
+            appId: "1:971162876623:web:08ebe7cde76e3527bc55ba",
+            measurementId: "G-ZJRBNWV5WZ"
+        };
+
+        // Initialize Firebase
+        let app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        let db = getFirestore(app);
+        let auth = getAuth(app);
+        
+        let userId = null;
+        let userEmail = 'Anonymous';
+        let isAdmin = false; // Flag to check if the current user is an admin
+        const ADMIN_UID = "H49ijob3rjamvjP3Jq6LyX7ZZHB3"; // <<< ADMIN UID SET HERE
+
+        let allProducts = []; // To store products fetched from Firestore
+        let cart = []; // Local representation of cart
+        let wishlist = []; // Local representation of wishlist
+
+        // --- Firebase Initialization and Authentication ---
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // Set up auth state listener
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        userEmail = user.email || 'Anonymous';
+                        document.getElementById('user-email').textContent = userEmail;
+                        document.getElementById('user-id').textContent = userId;
+                        document.getElementById('logout-button').classList.remove('hidden');
+                        document.getElementById('google-login-button').classList.add('hidden');
+                        document.getElementById('email-login-button').classList.add('hidden');
+                        document.getElementById('user-profile-details').classList.remove('hidden');
+
+                        // Check for admin status
+                        isAdmin = (userId === ADMIN_UID);
+                        if (isAdmin) {
+                            document.getElementById('admin-panel-nav-link').classList.remove('hidden');
+                            document.getElementById('mobile-admin-panel-nav-link').classList.remove('hidden');
+                        } else {
+                            document.getElementById('admin-panel-nav-link').classList.add('hidden');
+                            document.getElementById('mobile-admin-panel-nav-link').classList.add('hidden');
+                        }
+
+                        await loadUserProfile();
+                    } else {
+                        userId = crypto.randomUUID(); // Anonymous user ID
+                        userEmail = 'Anonymous';
+                        isAdmin = false;
+                        document.getElementById('user-email').textContent = 'Anonymous';
+                        document.getElementById('user-id').textContent = userId;
+                        document.getElementById('logout-button').classList.add('hidden');
+                        document.getElementById('google-login-button').classList.remove('hidden');
+                        document.getElementById('email-login-button').classList.remove('hidden');
+                        document.getElementById('user-profile-details').classList.add('hidden');
+                        document.getElementById('admin-panel-nav-link').classList.add('hidden');
+                        document.getElementById('mobile-admin-panel-nav-link').classList.add('hidden');
+                    }
+                    await initializeData(); // Initialize data after auth is ready
+                });
+
+                // Sign in anonymously if no token is provided (default behavior)
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+            } catch (error) {
+                console.error("Error initializing Firebase:", error);
+                showMessageBox('Error', 'Failed to initialize the application. Please try again later.');
+            }
+        });
+
+        async function initializeData() {
+            await populateProductsIfEmpty(); // Ensure products are there
+            fetchProducts(); // Start listening for product changes
+            setupCartAndWishlistListeners(); // Start listening for user-specific data
+        }
+
+        // --- Firebase Data Management ---
+
+        // Populate products collection if empty (using a simple check)
+        async function populateProductsIfEmpty() {
+            const productsColRef = collection(db, `artifacts//public/data/products`);
+            const docRef = doc(productsColRef, "1"); // Check if product with ID 1 exists
+            const docSnap = await getDoc(docRef);
+
+            if (!docSnap.exists()) {
+                console.log("Products collection seems empty. Populating with initial data.");
+                const initialProducts = [
+                    {
+                        id: 1,
+                        title: "Summer Floral Dress",
+                        category: "Women's Collection",
+                        price: 49.99,
+                        description: "This beautiful summer dress features a floral pattern and lightweight fabric perfect for warm weather. The dress has a comfortable fit and is available in multiple sizes.",
+                        image: "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+                        thumbnails: [
+                            "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+                            "https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+                            "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+                            "https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80"
+                        ],
+                        sizes: ["XS", "S", "M", "L", "XL"],
+                        colors: ["blue", "pink", "white"]
+                    },
+                    {
+                        id: 2,
+                        title: "Casual Linen Shirt",
+                        category: "Men's Collection",
+                        price: 39.99,
+                        description: "This comfortable linen shirt is perfect for casual outings. The breathable fabric keeps you cool in warm weather while maintaining a stylish look.",
+                        image: "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=736&q=80",
+                        thumbnails: [
+                            "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=736&q=80",
+                            "https://images.unsplash.com/photo-1527719327859-c6ce80353573?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=764&q=80",
+                            "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1025&q=80",
+                            "https://images.unsplash.com/photo-1595343108019-7b05d0b5e355?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80"
+                        ],
+                        sizes: ["S", "M", "L", "XL", "XXL"],
+                        colors: ["white", "blue", "gray"]
+                    },
+                    {
+                        id: 3,
+                        title: "Slim Fit Jeans",
+                        category: "Women's Collection",
+                        price: 34.99,
+                        originalPrice: 49.99, // For sale item
+                        description: "These slim fit jeans offer both comfort and style. Made with stretch denim for flexibility, they're perfect for everyday wear.",
+                        image: "https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=735&q=80",
+                        thumbnails: [
+                            "https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=735&q=80",
+                            "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+                            "https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+                            "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80"
+                        ],
+                        sizes: ["26", "28", "30", "32", "34"],
+                        colors: ["blue", "black"]
+                    },
+                    {
+                        id: 4,
+                        title: "Denim Jacket",
+                        category: "Men's Collection",
+                        price: 59.99,
+                        description: "This classic denim jacket is a wardrobe essential. Made from durable denim with a comfortable fit, it's perfect for layering in any season.",
+                        image: "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+                        thumbnails: [
+                            "https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+                            "https://images.unsplash.com/photo-1527719327859-c6ce80353573?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=764&q=80",
+                            "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=736&q=80",
+                            "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1025&q=80"
+                        ],
+                        sizes: ["S", "M", "L", "XL"],
+                        colors: ["blue", "black"]
+                    },
+                    {
+                        id: 5,
+                        title: "Silk Blouse",
+                        category: "Women's Collection",
+                        price: 45.99,
+                        description: "This elegant silk blouse features a delicate pattern and flowing fabric that drapes beautifully. Perfect for both work and special occasions.",
+                        image: "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+                        thumbnails: [
+                            "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+                            "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+                            "https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+                            "https://images.unsplash.com/photo-1525507119028-ed4c629a60a3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=735&q=80"
+                        ],
+                        sizes: ["S", "M", "L"],
+                        colors: ["white", "cream", "black"]
+                    },
+                    {
+                        id: 6,
+                        title: "Graphic T-Shirt",
+                        category: "Men's Collection",
+                        price: 29.99,
+                        description: "This comfortable cotton t-shirt features a unique graphic print. The relaxed fit makes it perfect for casual wear.",
+                        image: "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1025&q=80",
+                        thumbnails: [
+                            "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1025&q=80",
+                            "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=736&q=80",
+                            "https://images.unsplash.com/photo-1527719327859-c6ce80353573?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=764&q=80",
+                            "https://images.unsplash.com/photo-1595343108019-7b05d0b5e355?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80"
+                        ],
+                        sizes: ["S", "M", "L", "XL"],
+                        colors: ["black", "white", "green"]
+                    },
+                    {
+                        id: 7,
+                        title: "Midi Skirt",
+                        category: "Women's Collection",
+                        price: 39.99,
+                        description: "This stylish midi skirt is perfect for a chic and comfortable look. Made with a soft fabric, it's suitable for various occasions.",
+                        image: "https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+                        thumbnails: [
+                            "https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+                            "https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+                            "https://images.unsplash.com/photo-1551232864-3f0890e580d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+                            "https://images.unsplash.com/photo-1539109136881-3be0616acf4b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80"
+                        ],
+                        sizes: ["XS", "S", "M", "L"],
+                        colors: ["black", "red", "gray"]
+                    },
+                    {
+                        id: 8,
+                        title: "Chino Shorts",
+                        category: "Men's Collection",
+                        price: 35.99,
+                        description: "These comfortable chino shorts are perfect for a relaxed summer look. Made with breathable cotton, they offer both style and comfort.",
+                        image: "https://images.unsplash.com/photo-1595343108019-7b05d0b5e355?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+                        thumbnails: [
+                            "https://images.unsplash.com/photo-1595343108019-7b05d0b5e355?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
+                            "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=736&q=80",
+                            "https://images.unsplash.com/photo-1527719327859-c6ce80353573?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=764&q=80",
+                            "https://images.unsplash.com/photo-1598033129183-c4f50c736f10?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1025&q=80"
+                        ],
+                        sizes: ["28", "30", "32", "34", "36"],
+                        colors: ["beige", "navy", "green"]
+                    }
+                ];
+                let currentProductId = initialProducts.length + 1; // For generating new IDs
+
+                for (const product of initialProducts) {
+                    await setDoc(doc(productsColRef, String(product.id)), product);
+                }
+                console.log("Initial products populated.");
+            }
+        }
+
+        // Fetch products from Firestore (real-time listener)
+        function fetchProducts() {
+            const productsCol = collection(db, `artifacts//public/data/products`);
+            onSnapshot(productsCol, (snapshot) => {
+                allProducts = snapshot.docs.map(doc => ({ id: parseInt(doc.id), ...doc.data() }));
+                // Sort products by ID to ensure consistent display order
+                allProducts.sort((a, b) => a.id - b.id);
+
+                renderProducts(allProducts, 'featured-products-container');
+                renderProducts(allProducts.filter(p => p.category.includes('New Arrivals') || p.id > 4), 'new-arrivals-container'); // Example for new arrivals
+                if (isAdmin) {
+                    renderAdminProductList(); // Update admin product list
+                }
+            }, (error) => {
+                console.error("Error fetching products:", error);
+                showMessageBox('Error', 'Failed to load products.');
+            });
+        }
+
+        // Setup Cart and Wishlist Listeners
+        function setupCartAndWishlistListeners() {
+            if (!userId) {
+                console.log("User ID not available for cart/wishlist listeners.");
+                return;
+            }
+
+            const cartRef = doc(db, `artifacts//users//cart/items`);
+            onSnapshot(cartRef, (docSnap) => {
+                const cartData = docSnap.exists() ? docSnap.data().items : [];
+                cart = cartData;
+                updateCartUI();
+            }, (error) => {
+                console.error("Error fetching cart:", error);
+            });
+
+            const wishlistRef = doc(db, `artifacts//users//wishlist/items`);
+            onSnapshot(wishlistRef, (docSnap) => {
+                const wishlistData = docSnap.exists() ? docSnap.data().items : [];
+                wishlist = wishlistData;
+                renderWishlist();
+            }, (error) => {
+                console.error("Error fetching wishlist:", error);
+            });
+        }
+
+        // Load User Profile
+        async function loadUserProfile() {
+            if (!userId || userEmail === 'Anonymous') {
+                document.getElementById('user-profile-details').classList.add('hidden');
+                return;
+            }
+            const userProfileRef = doc(db, `artifacts//users//profile/details`);
+            const docSnap = await getDoc(userProfileRef);
+            if (docSnap.exists()) {
+                const profileData = docSnap.data();
+                document.getElementById('profile-name').value = profileData.name || '';
+                document.getElementById('profile-address').value = profileData.address || '';
+            } else {
+                document.getElementById('profile-name').value = '';
+                document.getElementById('profile-address').value = '';
+            }
+            document.getElementById('user-profile-details').classList.remove('hidden');
+        }
+
+        // Save User Profile
+        document.getElementById('save-profile-button').addEventListener('click', async () => {
+            if (!userId || userEmail === 'Anonymous') {
+                showMessageBox('Login Required', 'Please log in to save your profile.');
+                return;
+            }
+            const name = document.getElementById('profile-name').value;
+            const address = document.getElementById('profile-address').value;
+            const userProfileRef = doc(db, `artifacts//users//profile/details`);
+            try {
+                await setDoc(userProfileRef, { name, address }, { merge: true });
+                document.getElementById('profile-save-message').textContent = 'Profile saved successfully!';
+                document.getElementById('profile-save-message').classList.remove('hidden');
+                setTimeout(() => document.getElementById('profile-save-message').classList.add('hidden'), 3000);
+            } catch (error) {
+                console.error("Error saving profile:", error);
+                showMessageBox('Error', 'Failed to save profile. Please try again.');
+            }
+        });
+
+        // --- Authentication UI Handlers ---
+        document.getElementById('google-login-button').addEventListener('click', async () => {
+            const provider = new GoogleAuthProvider();
+            try {
+                await signInWithPopup(auth, provider);
+            } catch (error) {
+                console.error("Google sign-in error:", error);
+                document.getElementById('auth-error-message').textContent = error.message;
+                document.getElementById('auth-error-message').classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('email-login-button').addEventListener('click', () => {
+            document.getElementById('auth-buttons').classList.add('hidden');
+            document.getElementById('email-auth-form').classList.remove('hidden');
+            document.getElementById('auth-error-message').classList.add('hidden');
+        });
+
+        document.getElementById('back-to-auth-options').addEventListener('click', () => {
+            document.getElementById('auth-buttons').classList.remove('hidden');
+            document.getElementById('email-auth-form').classList.add('hidden');
+            document.getElementById('auth-error-message').classList.add('hidden');
+        });
+
+        document.getElementById('email-signup-button').addEventListener('click', async () => {
+            const email = document.getElementById('email-input').value;
+            const password = document.getElementById('password-input').value;
+            try {
+                await createUserWithEmailAndPassword(auth, email, password);
+                document.getElementById('auth-error-message').classList.add('hidden');
+            } catch (error) {
+                console.error("Email sign-up error:", error);
+                document.getElementById('auth-error-message').textContent = error.message;
+                document.getElementById('auth-error-message').classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('email-signin-button').addEventListener('click', async () => {
+            const email = document.getElementById('email-input').value;
+            const password = document.getElementById('password-input').value;
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+                document.getElementById('auth-error-message').classList.add('hidden');
+            } catch (error) {
+                console.error("Email sign-in error:", error);
+                document.getElementById('auth-error-message').textContent = error.message;
+                document.getElementById('auth-error-message').classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('logout-button').addEventListener('click', async () => {
+            try {
+                await signOut(auth);
+                showMessageBox('Logged Out', 'You have been successfully logged out.');
+                // Re-authenticate anonymously after logout
+                await signInAnonymously(auth);
+            } catch (error) {
+                console.error("Logout error:", error);
+                showMessageBox('Error', 'Failed to log out. Please try again.');
+            }
+        });
+
+        // --- UI Navigation and Product Rendering ---
+
+        // Show/Hide Sections
+        function showSection(sectionId) {
+            document.querySelectorAll('main section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            document.getElementById(sectionId).classList.remove('hidden');
+            document.getElementById(sectionId).classList.add('active-section'); // Add active class for styling if needed
+            window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top
+        }
+
+        // Render Products to a Container
+        function renderProducts(productsToRender, containerId) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            container.innerHTML = productsToRender.map(product => `
+                <div class="product-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
+                    <div class="relative overflow-hidden">
+                        <img src="" onerror="this.onerror=null;this.src='https://placehold.co/687x800/e0e0e0/ffffff?text=Image+Not+Found';" alt="" class="w-full h-80 object-cover">
+                         ''
+                        <div class="quick-view absolute bottom-0 left-0 right-0 bg-white text-center py-2">
+                            <button class="text-pink-500 font-medium" onclick="openQuickView()">Quick View</button>
+                        </div>
+                    </div>
+                    <div class="p-4">
+                        <h3 class="text-lg font-semibold mb-1"></h3>
+                        <p class="text-gray-600 text-sm mb-2"></p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg font-bold  ''">$</span>
+                            </span>` : ''}
+                            <button onclick="addToCart()" class="bg-gray-800 hover:bg-gray-700 text-white px-3 py-1 rounded text-sm transition">Add to Cart</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Filter Products (for navigation links)
+        function filterProducts(category) {
+            let filtered = [];
+            let title = '';
+
+            if (category === 'All') {
+                filtered = allProducts;
+                title = 'All Products';
+            } else if (category === 'Women') {
+                filtered = allProducts.filter(p => p.category.includes("Women's Collection"));
+                title = "Women's Collection";
+            } else if (category === 'Men') {
+                filtered = allProducts.filter(p => p.category.includes("Men's Collection"));
+                title = "Men's Collection";
+            } else if (category === 'New Arrivals') {
+                // Products with id > 4 are considered new arrivals in the initial dataset
+                // In a real app, you'd have a 'newArrival' flag or sort by date added
+                filtered = allProducts.filter(p => p.id > 4);
+                title = "New Arrivals";
+            } else if (category === 'Sale') {
+                filtered = allProducts.filter(p => p.originalPrice); // Products with originalPrice are on sale
+                title = "Sale Items";
+            }
+
+            document.getElementById('product-listing-title').textContent = title;
+            renderProducts(filtered, 'product-listing-container');
+            showSection('product-listing-section');
+        }
+
+        // Mobile Menu Toggle
+        const mobileMenuButton = document.getElementById('mobile-menu-button');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        mobileMenuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // --- Cart Functionality ---
+
+        // Open/Close Cart
+        const cartButton = document.getElementById('cart-button');
+        const cartSidebar = document.getElementById('cart-sidebar');
+        
+        cartButton.addEventListener('click', openCart);
+        document.getElementById('mobile-cart-count').parentElement.addEventListener('click', openCart); // For mobile cart icon
+
+        function openCart() {
+            cartSidebar.classList.remove('translate-x-full');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeCart() {
+            cartSidebar.classList.add('translate-x-full');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Add to Cart Function
+        async function addToCart(productId, quantity = 1) {
+            if (!userId) {
+                showMessageBox('Error', 'User not authenticated. Please try again.');
+                return;
+            }
+
+            const product = allProducts.find(p => p.id === productId);
+            if (!product) {
+                console.error("Product not found:", productId);
+                return;
+            }
+
+            const existingItemIndex = cart.findIndex(item => item.id === productId);
+            
+            if (existingItemIndex > -1) {
+                cart[existingItemIndex].quantity += quantity;
+            } else {
+                cart.push({
+                    id: product.id,
+                    title: product.title,
+                    price: product.price,
+                    image: product.image,
+                    quantity: quantity
+                });
+            }
+            
+            await updateCartInFirestore();
+            showNotification(product.title, product.image);
+        }
+
+        // Update Cart in Firestore
+        async function updateCartInFirestore() {
+            if (!userId) return;
+            const cartRef = doc(db, `artifacts//users//cart/items`);
+            try {
+                await setDoc(cartRef, { items: cart });
+            } catch (error) {
+                console.error("Error updating cart in Firestore:", error);
+                showMessageBox('Error', 'Failed to update cart. Please try again.');
+            }
+        }
+        
+        // Update Cart UI (called after Firestore update)
+        function updateCartUI() {
+            const cartItemsContainer = document.getElementById('cart-items');
+            
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = `
+                    <div class="text-center py-10 text-gray-500">
+                        <i class="fas fa-shopping-bag text-4xl mb-2"></i>
+                        <p>Your cart is empty</p>
+                    </div>
+                `;
+            } else {
+                cartItemsContainer.innerHTML = cart.map(item => `
+                    <div class="flex items-start border-b pb-4">
+                        <img src="" onerror="this.onerror=null;this.src='https://placehold.co/80x80/e0e0e0/ffffff?text=No+Image';" alt="" class="w-20 h-20 object-cover rounded mr-4">
+                        <div class="flex-grow">
+                            <h3 class="font-medium"></h3>
+                            <p class="text-gray-600 text-sm">$</p>
+                            <div class="flex items-center mt-2">
+                                <button onclick="updateQuantity(, -1)" class="text-gray-500 hover:text-gray-700 px-2">
+                                    <i class="fas fa-minus text-xs"></i>
+                                </button>
+                                <span class="px-2"></span>
+                                <button onclick="updateQuantity(, 1)" class="text-gray-500 hover:text-gray-700 px-2">
+                                    <i class="fas fa-plus text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <button onclick="removeFromCart()" class="text-gray-500 hover:text-gray-700 ml-2">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                `).join('');
+            }
+            
+            // Calculate totals
+            const subtotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+            document.getElementById('cart-subtotal').textContent = `$`;
+            document.getElementById('cart-total').textContent = `$`; // Assuming free shipping for simplicity
+            updateCartCount();
+        }
+        
+        // Update Quantity
+        async function updateQuantity(id, change) {
+            const item = cart.find(item => item.id === id);
+            
+            if (item) {
+                item.quantity += change;
+                
+                if (item.quantity <= 0) {
+                    cart = cart.filter(item => item.id !== id);
+                }
+                await updateCartInFirestore();
+            }
+        }
+        
+        // Remove from Cart
+        async function removeFromCart(id) {
+            cart = cart.filter(item => item.id !== id);
+            await updateCartInFirestore();
+        }
+
+        // Update Cart Count (for header and mobile)
+        function updateCartCount() {
+            const count = cart.reduce((total, item) => total + item.quantity, 0);
+            document.getElementById('cart-count').textContent = count;
+            document.getElementById('mobile-cart-count').textContent = count;
+            document.getElementById('sidebar-cart-count').textContent = count;
+        }
+        
+        // Show Notification
+        function showNotification(title, image) {
+            const notification = document.getElementById('cart-notification');
+            const notificationTitle = document.getElementById('notification-title');
+            const notificationImage = document.getElementById('notification-image');
+            
+            notificationTitle.textContent = title;
+            notificationImage.src = image;
+            
+            notification.classList.remove('hidden');
+            
+            setTimeout(() => {
+                notification.classList.add('hidden');
+            }, 3000);
+        }
+        
+        function closeNotification() {
+            document.getElementById('cart-notification').classList.add('hidden');
+        }
+        
+        // --- Quick View Modal ---
+        let currentQuickViewProduct = null;
+        function openQuickView(productId) {
+            const modal = document.getElementById('quick-view-modal');
+            const product = allProducts.find(p => p.id === productId);
+            currentQuickViewProduct = product;
+
+            if (!product) {
+                console.error("Product not found for quick view:", productId);
+                return;
+            }
+
+            document.getElementById('quick-view-image').src = product.image;
+            document.getElementById('quick-view-title').textContent = product.title;
+            document.getElementById('quick-view-category').textContent = product.category;
+            
+            const priceText = product.originalPrice ? 
+                `<span class="text-pink-500">$</span> <span class="text-sm text-gray-500 line-through ml-2">$</span>` : 
+                `$`;
+            document.getElementById('quick-view-price').innerHTML = priceText;
+            
+            document.getElementById('quick-view-description').textContent = product.description;
+
+            // Render thumbnails
+            const thumbnailsContainer = document.getElementById('quick-view-thumbnails');
+            thumbnailsContainer.innerHTML = (product.thumbnails || []).map(thumb => `
+                <div class="border rounded p-1 cursor-pointer" onclick="document.getElementById('quick-view-image').src = ''">
+                    <img src="" onerror="this.onerror=null;this.src='https://placehold.co/60x60/e0e0e0/ffffff?text=No+Image';" alt="Thumbnail" class="w-full">
+                </div>
+            `).join('');
+
+            // Render sizes
+            const sizesContainer = document.getElementById('quick-view-sizes');
+            sizesContainer.innerHTML = (product.sizes || []).map((size, index) => `
+                <button class="border px-3 py-1 rounded hover:bg-gray-100  ''"></button>
+            `).join('');
+            // Add event listeners for size selection (simple example, could be more robust)
+            sizesContainer.querySelectorAll('button').forEach(button => {
+                button.addEventListener('click', () => {
+                    sizesContainer.querySelectorAll('button').forEach(btn => btn.classList.remove('bg-gray-800', 'text-white'));
+                    button.classList.add('bg-gray-800', 'text-white');
+                });
+            });
+
+            // Render colors
+            const colorsContainer = document.getElementById('quick-view-colors');
+            colorsContainer.innerHTML = (product.colors || []).map((color, index) => `
+                <button class="w-8 h-8 rounded-full  border-2  'border-white' shadow-md" onclick="selectColor(this, '')"></button>
+            `).join('');
+            // Initial selection for first color
+            if (product.colors && product.colors.length > 0) {
+                colorsContainer.querySelector('button').classList.add('border-pink-500');
+            }
+
+
+            // Quantity controls
+            let quickViewQuantity = 1;
+            document.getElementById('quick-view-quantity').textContent = quickViewQuantity;
+            document.getElementById('quick-view-quantity-minus').onclick = () => {
+                if (quickViewQuantity > 1) {
+                    quickViewQuantity--;
+                    document.getElementById('quick-view-quantity').textContent = quickViewQuantity;
+                }
+            };
+            document.getElementById('quick-view-quantity-plus').onclick = () => {
+                quickViewQuantity++;
+                document.getElementById('quick-view-quantity').textContent = quickViewQuantity;
+            };
+
+            document.getElementById('quick-view-add-to-cart').onclick = () => {
+                addToCart(product.id, quickViewQuantity);
+                closeQuickView();
+            };
+
+            document.getElementById('quick-view-add-to-wishlist').onclick = () => {
+                addToWishlist(product.id);
+                closeQuickView();
+            };
+
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function getColorClass(colorName) {
+            switch (colorName.toLowerCase()) {
+                case 'blue': return 'bg-blue-500';
+                case 'black': return 'bg-black';
+                case 'pink': return 'bg-pink-500';
+                case 'gray': return 'bg-gray-500';
+                case 'white': return 'bg-gray-200';
+                case 'cream': return 'bg-yellow-100';
+                case 'navy': return 'bg-blue-800';
+                case 'red': return 'bg-red-500';
+                case 'green': return 'bg-green-500';
+                case 'beige': return 'bg-yellow-200';
+                default: return 'bg-gray-400'; // Default color
+            }
+        }
+
+        function selectColor(button, color) {
+            const colorsContainer = document.getElementById('quick-view-colors');
+            colorsContainer.querySelectorAll('button').forEach(btn => btn.classList.remove('border-pink-500'));
+            button.classList.add('border-pink-500');
+            // You can store the selected color in a variable if needed for adding to cart
+        }
+
+        function closeQuickView() {
+            document.getElementById('quick-view-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        // --- Wishlist Functionality ---
+
+        async function addToWishlist(productId) {
+            if (!userId) {
+                showMessageBox('Login Required', 'Please log in to add items to your wishlist.');
+                return;
+            }
+
+            const product = allProducts.find(p => p.id === productId);
+            if (!product) {
+                console.error("Product not found for wishlist:", productId);
+                return;
+            }
+
+            const existingItem = wishlist.find(item => item.id === productId);
+            if (!existingItem) {
+                wishlist.push({
+                    id: product.id,
+                    title: product.title,
+                    price: product.price,
+                    image: product.image,
+                    addedAt: new Date().toISOString()
+                });
+                await updateWishlistInFirestore();
+                showMessageBox('Wishlist Updated', ` added to your wishlist!`);
+            } else {
+                showMessageBox('Already in Wishlist', ` is already in your wishlist.`);
+            }
+        }
+
+        async function removeFromWishlist(productId) {
+            if (!userId) return;
+            wishlist = wishlist.filter(item => item.id !== productId);
+            await updateWishlistInFirestore();
+            showMessageBox('Wishlist Updated', 'Item removed from your wishlist.');
+        }
+
+        async function updateWishlistInFirestore() {
+            if (!userId) return;
+            const wishlistRef = doc(db, `artifacts//users//wishlist/items`);
+            try {
+                await setDoc(wishlistRef, { items: wishlist });
+            } catch (error) {
+                console.error("Error updating wishlist in Firestore:", error);
+                showMessageBox('Error', 'Failed to update wishlist. Please try again.');
+            }
+        }
+
+        function renderWishlist() {
+            const wishlistContainer = document.getElementById('wishlist-items-container');
+            if (!wishlistContainer) return;
+
+            if (wishlist.length === 0) {
+                wishlistContainer.innerHTML = `
+                    <div class="text-center py-10 text-gray-500 col-span-full">
+                        <i class="fas fa-heart text-4xl mb-2"></i>
+                        <p>Your wishlist is empty.</p>
+                    </div>
+                `;
+            } else {
+                wishlistContainer.innerHTML = wishlist.map(item => `
+                    <div class="product-card bg-white rounded-lg overflow-hidden shadow-md hover:shadow-lg transition">
+                        <div class="relative overflow-hidden">
+                            <img src="" onerror="this.onerror=null;this.src='https://placehold.co/687x800/e0e0e0/ffffff?text=Image+Not+Found';" alt="" class="w-full h-80 object-cover">
+                        </div>
+                        <div class="p-4">
+                            <h3 class="text-lg font-semibold mb-1"></h3>
+                            <p class="text-gray-600 text-sm mb-2">Price: $</p>
+                            <div class="flex justify-between items-center mt-2">
+                                <button onclick="addToCart(); removeFromWishlist()" class="bg-pink-500 hover:bg-pink-600 text-white px-3 py-1 rounded text-sm transition">Add to Cart</button>
+                                <button onclick="removeFromWishlist()" class="text-gray-500 hover:text-red-500">
+                                    <i class="fas fa-trash"></i> Remove
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+
+        // --- Checkout Functionality ---
+        function proceedToCheckout() {
+            if (cart.length === 0) {
+                showMessageBox('Empty Cart', 'Your cart is empty. Please add items before proceeding to checkout.');
+                return;
+            }
+            showSection('checkout-section');
+            renderCheckoutSummary();
+            closeCart();
+        }
+
+        function renderCheckoutSummary() {
+            const checkoutItemsContainer = document.getElementById('checkout-items');
+            const checkoutTotalSpan = document.getElementById('checkout-total');
+            let totalAmount = 0;
+
+            checkoutItemsContainer.innerHTML = '';
+            cart.forEach(item => {
+                totalAmount += item.price * item.quantity;
+                checkoutItemsContainer.innerHTML += `
+                    <div class="flex items-center mb-3">
+                        <img src="" onerror="this.onerror=null;this.src='https://placehold.co/60x60/e0e0e0/ffffff?text=No+Image';" alt="" class="w-16 h-16 object-cover rounded mr-4">
+                        <div class="flex-grow">
+                            <p class="font-medium">.title}</p>
+                            <p class="text-gray-600 text-sm">$${item.price.toFixed(2)} x ${item.quantity}</p>
+                        </div>
+                        <span class="font-semibold">$${(item.price * item.quantity).toFixed(2)}</span>
+                    </div>
+                `;
+            });
+            checkoutTotalSpan.textContent = `$${totalAmount.toFixed(2)}`;
+
+            // Render PayPal buttons
+            renderPayPalButtons(totalAmount);
+        }
+
+        function renderPayPalButtons(amount) {
+            const paypalButtonContainer = document.getElementById('paypal-button-container');
+            paypalButtonContainer.innerHTML = ''; // Clear previous buttons
+
+            // Check if paypal SDK is loaded
+            if (typeof paypal === 'undefined') {
+                console.error("PayPal SDK not loaded.");
+                showMessageBox('Payment Error', 'PayPal payment system is not available. Please try again later.');
+                return;
+            }
+
+            paypal.Buttons({
+                createOrder: function(data, actions) {
+                    return actions.order.create({
+                        purchase_units: [{
+                            amount: {
+                                value: amount.toFixed(2)
+                            }
+                        }]
+                    });
+                },
+                onApprove: function(data, actions) {
+                    return actions.order.capture().then(function(details) {
+                        showMessageBox('Payment Successful!', `Transaction completed by ${details.payer.name.given_name}. Order ID: ${data.orderID}`);
+                        // Clear cart after successful payment
+                        cart = [];
+                        updateCartInFirestore();
+                        showSection('home-section'); // Redirect to home or order confirmation
+                    });
+                },
+                onError: function(err) {
+                    console.error("PayPal Error:", err);
+                    showMessageBox('Payment Error', 'Your PayPal payment could not be processed. Please try again.');
+                }
+            }).render('#paypal-button-container');
+        }
+
+        // --- Custom Message Box (replaces alert/confirm) ---
+        function showMessageBox(title, message, isConfirm = false, confirmCallback = null) {
+            document.getElementById('message-box-title').textContent = title;
+            document.getElementById('message-box-content').textContent = message;
+            
+            const okButton = document.querySelector('#custom-message-box button');
+            okButton.textContent = 'OK';
+            okButton.onclick = () => {
+                closeMessageBox();
+                if (confirmCallback) confirmCallback(true);
+            };
+
+            if (isConfirm) {
+                const cancelButton = document.createElement('button');
+                cancelButton.textContent = 'Cancel';
+                cancelButton.classList.add('bg-gray-300', 'hover:bg-gray-400', 'text-gray-800', 'px-6', 'py-3', 'rounded-md', 'font-medium', 'transition', 'ml-4');
+                cancelButton.onclick = () => {
+                    closeMessageBox();
+                    if (confirmCallback) confirmCallback(false);
+                };
+                okButton.parentNode.insertBefore(cancelButton, okButton.nextSibling);
+            }
+
+            document.getElementById('custom-message-box').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeMessageBox() {
+            document.getElementById('custom-message-box').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            // Remove the cancel button if it exists
+            const okButton = document.querySelector('#custom-message-box button');
+            if (okButton && okButton.nextElementSibling && okButton.nextElementSibling.textContent === 'Cancel') {
+                okButton.nextElementSibling.remove();
+            }
+        }
+
+        // --- Gemini Support Assistant ---
+        const geminiChatToggle = document.getElementById('gemini-chat-toggle');
+        const mobileGeminiChatToggle = document.getElementById('mobile-gemini-chat-toggle');
+        const geminiChatModal = document.getElementById('gemini-chat-modal');
+        const geminiChatMessages = document.getElementById('gemini-chat-messages');
+        const geminiChatInput = document.getElementById('gemini-chat-input');
+        const geminiChatSend = document.getElementById('gemini-chat-send');
+
+        let chatHistory = [{ role: "user", parts: [{ text: "You are a helpful shopping assistant for Motheryouare. Answer questions about products, shipping, returns, and general shopping inquiries. Do not answer questions unrelated to shopping or Motheryouare. Keep responses concise and helpful." }] }];
+
+        geminiChatToggle.addEventListener('click', openGeminiChat);
+        mobileGeminiChatToggle.addEventListener('click', openGeminiChat);
+
+        function openGeminiChat() {
+            geminiChatModal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            geminiChatInput.focus();
+        }
+
+        function closeGeminiChat() {
+            geminiChatModal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+
+        geminiChatSend.addEventListener('click', sendMessageToGemini);
+        geminiChatInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessageToGemini();
+            }
+        });
+
+        async function sendMessageToGemini() {
+            const userMessage = geminiChatInput.value.trim();
+            if (!userMessage) return;
+
+            appendMessage(userMessage, 'user');
+            geminiChatInput.value = '';
+            geminiChatSend.disabled = true; // Disable send button
+            geminiChatInput.placeholder = 'Thinking...';
+
+            chatHistory.push({ role: "user", parts: [{ text: userMessage }] });
+
+            try {
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // Canvas will inject this at runtime
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const aiResponse = result.candidates[0].content.parts[0].text;
+                    appendMessage(aiResponse, 'ai');
+                    chatHistory.push({ role: "model", parts: [{ text: aiResponse }] });
+                } else {
+                    appendMessage("Sorry, I couldn't get a response. Please try again.", 'ai');
+                    console.error("Gemini API error: Unexpected response structure", result);
+                }
+            } catch (error) {
+                console.error("Error calling Gemini API:", error);
+                appendMessage("Sorry, there was an error connecting to the AI. Please try again.", 'ai');
+            } finally {
+                geminiChatSend.disabled = false; // Re-enable send button
+                geminiChatInput.placeholder = 'Ask me anything...';
+                geminiChatMessages.scrollTop = geminiChatMessages.scrollHeight; // Scroll to bottom
+            }
+        }
+
+        function appendMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('flex', 'mb-3');
+            if (sender === 'user') {
+                messageDiv.classList.add('justify-end');
+                messageDiv.innerHTML = `<div class="bg-pink-500 text-white p-3 rounded-lg max-w-[80%]">${text}</div>`;
+            } else {
+                messageDiv.classList.add('justify-start');
+                messageDiv.innerHTML = `<div class="bg-gray-200 text-gray-800 p-3 rounded-lg max-w-[80%]">${text}</div>`;
+            }
+            geminiChatMessages.appendChild(messageDiv);
+            geminiChatMessages.scrollTop = geminiChatMessages.scrollHeight; // Scroll to bottom
+        }
+
+        // --- Admin Panel Functions ---
+
+        // Add Product
+        document.getElementById('add-product-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!isAdmin) {
+                showMessageBox('Access Denied', 'You do not have permission to add products.');
+                return;
+            }
+
+            const form = e.target;
+            const title = form['product-title'].value;
+            const category = form['product-category'].value;
+            const price = parseFloat(form['product-price'].value);
+            const originalPrice = form['product-original-price'].value ? parseFloat(form['product-original-price'].value) : null;
+            const description = form['product-description'].value;
+            const image = form['product-image'].value;
+            const thumbnails = form['product-thumbnails'].value.split(',').map(url => url.trim()).filter(url => url);
+            const sizes = form['product-sizes'].value.split(',').map(s => s.trim()).filter(s => s);
+            const colors = form['product-colors'].value.split(',').map(c => c.trim()).filter(c => c);
+
+            const newProduct = {
+                id: Date.now(), // Simple unique ID
+                title,
+                category,
+                price,
+                originalPrice,
+                description,
+                image,
+                thumbnails,
+                sizes,
+                colors
+            };
+
+            try {
+                await setDoc(doc(db, `artifacts/${firebaseConfig.appId}/public/data/products`, String(newProduct.id)), newProduct);
+                form.reset();
+                document.getElementById('add-product-message').textContent = 'Product added successfully!';
+                document.getElementById('add-product-message').classList.remove('hidden', 'text-red-500');
+                document.getElementById('add-product-message').classList.add('text-green-600');
+                setTimeout(() => document.getElementById('add-product-message').classList.add('hidden'), 3000);
+            } catch (error) {
+                console.error("Error adding product:", error);
+                document.getElementById('add-product-message').textContent = 'Failed to add product: ' + error.message;
+                document.getElementById('add-product-message').classList.remove('hidden', 'text-green-600');
+                document.getElementById('add-product-message').classList.add('text-red-500');
+            }
+        });
+
+        // Render Admin Product List
+        function renderAdminProductList() {
+            const adminProductList = document.getElementById('admin-product-list');
+            if (!adminProductList) return;
+
+            adminProductList.innerHTML = allProducts.map(product => `
+                <tr class="border-b border-gray-200 hover:bg-gray-100">
+                    <td class="py-3 px-6 text-left whitespace-nowrap">${product.id}</td>
+                    <td class="py-3 px-6 text-left">${product.title}</td>
+                    <td class="py-3 px-6 text-left">${product.category}</td>
+                    <td class="py-3 px-6 text-left">$${product.price.toFixed(2)}</td>
+                    <td class="py-3 px-6 text-center">
+                        <div class="flex item-center justify-center">
+                            <button onclick="openEditProductModal(${product.id})" class="w-8 h-8 rounded-full bg-blue-500 hover:bg-blue-600 text-white flex items-center justify-center mr-2" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button onclick="deleteProduct(${product.id})" class="w-8 h-8 rounded-full bg-red-500 hover:bg-red-600 text-white flex items-center justify-center" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Delete Product
+        async function deleteProduct(productId) {
+            if (!isAdmin) {
+                showMessageBox('Access Denied', 'You do not have permission to delete products.');
+                return;
+            }
+
+            const confirmDelete = await new Promise(resolve => {
+                showMessageBox('Confirm Delete', 'Are you sure you want to delete this product?', true, resolve);
+            });
+
+            if (confirmDelete) {
+                try {
+                    await deleteDoc(doc(db, `artifacts/${firebaseConfig.appId}/public/data/products`, String(productId)));
+                    showMessageBox('Success', 'Product deleted successfully!');
+                } catch (error) {
+                    console.error("Error deleting product:", error);
+                    showMessageBox('Error', 'Failed to delete product: ' + error.message);
+                }
+            }
+        }
+
+        // Open Edit Product Modal
+        function openEditProductModal(productId) {
+            if (!isAdmin) {
+                showMessageBox('Access Denied', 'You do not have permission to edit products.');
+                return;
+            }
+
+            const product = allProducts.find(p => p.id === productId);
+            if (!product) {
+                showMessageBox('Error', 'Product not found for editing.');
+                return;
+            }
+
+            document.getElementById('edit-product-id').value = product.id;
+            document.getElementById('edit-product-title').value = product.title;
+            document.getElementById('edit-product-category').value = product.category;
+            document.getElementById('edit-product-price').value = product.price;
+            document.getElementById('edit-product-original-price').value = product.originalPrice || '';
+            document.getElementById('edit-product-description').value = product.description;
+            document.getElementById('edit-product-image').value = product.image;
+            document.getElementById('edit-product-thumbnails').value = (product.thumbnails || []).join(', ');
+            document.getElementById('edit-product-sizes').value = (product.sizes || []).join(', ');
+            document.getElementById('edit-product-colors').value = (product.colors || []).join(', ');
+
+            document.getElementById('edit-product-modal').classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close Edit Product Modal
+        function closeEditProductModal() {
+            document.getElementById('edit-product-modal').classList.add('hidden');
+            document.body.style.overflow = 'auto';
+            document.getElementById('edit-product-message').classList.add('hidden'); // Hide message on close
+        }
+
+        // Save Edited Product
+        document.getElementById('edit-product-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!isAdmin) {
+                showMessageBox('Access Denied', 'You do not have permission to save product changes.');
+                return;
+            }
+
+            const form = e.target;
+            const productId = parseInt(form['edit-product-id'].value);
+            const title = form['edit-product-title'].value;
+            const category = form['edit-product-category'].value;
+            const price = parseFloat(form['edit-product-price'].value);
+            const originalPrice = form['edit-product-original-price'].value ? parseFloat(form['edit-product-original-price'].value) : null;
+            const description = form['edit-product-description'].value;
+            const image = form['product-image'].value;
+            const thumbnails = form['edit-product-thumbnails'].value.split(',').map(url => url.trim()).filter(url => url);
+            const sizes = form['edit-product-sizes'].value.split(',').map(s => s.trim()).filter(s => s);
+            const colors = form['edit-product-colors'].value.split(',').map(c => c.trim()).filter(c => c);
+
+            const updatedProduct = {
+                id: productId,
+                title,
+                category,
+                price,
+                originalPrice,
+                description,
+                image,
+                thumbnails,
+                sizes,
+                colors
+            };
+
+            try {
+                await setDoc(doc(db, `artifacts/${firebaseConfig.appId}/public/data/products`, String(productId)), updatedProduct);
+                document.getElementById('edit-product-message').textContent = 'Product updated successfully!';
+                document.getElementById('edit-product-message').classList.remove('hidden', 'text-red-500');
+                document.getElementById('edit-product-message').classList.add('text-green-600');
+                // No need to manually update allProducts here, onSnapshot will handle it.
+                setTimeout(() => {
+                    document.getElementById('edit-product-message').classList.add('hidden');
+                    closeEditProductModal();
+                }, 1500); // Close after a short delay
+            } catch (error) {
+                console.error("Error updating product:", error);
+                document.getElementById('edit-product-message').textContent = 'Failed to update product: ' + error.message;
+                document.getElementById('edit-product-message').classList.remove('hidden', 'text-green-600');
+                document.getElementById('edit-product-message').classList.add('text-red-500');
+            }
+        });
+
+    </script>
+</body>
+</html>
